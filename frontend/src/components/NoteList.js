@@ -1,13 +1,27 @@
 import React from 'react';
 import NoteItem from './NoteItem';
 
-const NoteList = (props) => {
+const NoteList = props => {
+  // console.log(props.notes);
   return (
     <ul>
-      {/* Render list of notes here... */}
-      <NoteItem />
+      {props.notes.map(note => {
+        return (
+          <NoteItem
+            note={note}
+            key={note.id}
+            id={note.id}
+            title={note.title}
+            body={note.body}
+            shortenedNote={
+              note.body.length > 25 ? note.body.slice(0, 25) + "..." : note.body
+            }
+            clikedNote={() => props.clickedNote}
+          />
+        );
+      })}
     </ul>
   );
-}
+};
 
 export default NoteList;
