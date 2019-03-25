@@ -1,13 +1,13 @@
 import React from 'react';
 
-const NoteList = (props) => {
-
+const NoteItem = (props) => {
+  // console.log("in note item", props);
   return (
-    <li onClick={() => props.clickedNote(props.selectedNoteId)}>
+    <li onClick={props.clickedNote}>
       <h2>{props.title}</h2>
       <p>{props.shortenedNote}</p>
     </li>
   )
 }
 
-export default NoteList;
+export default NoteItem;

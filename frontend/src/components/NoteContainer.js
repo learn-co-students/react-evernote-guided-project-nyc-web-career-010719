@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import Search from './Search';
 import Sidebar from './Sidebar';
-import NoteEditor from './NoteEditor';
-import NoteViewer from './NoteViewer';
-import Instructions from './Instructions';
-// import Content from './Content';
+// import NoteEditor from './NoteEditor';
+// import NoteViewer from './NoteViewer';
+// import Instructions from './Instructions';
+import Content from './Content';
 
 const notesAPI = 'http://localhost:3000/api/v1/notes'
 
@@ -12,26 +12,23 @@ class NoteContainer extends Component {
   state = {
     notes: [],
     selectedNote: {},
-    selectedNoteId: null,
-    selectedEdit: false,
     filterNotes: [],
     searchTextInput: " "
   }
 
   componentDidMount() {
     fetch(notesAPI)
-    .then(res => res.json()).then(notes => this.setState({
+    .then(res => res.json())
+    .then(notes => this.setState({
       notes: notes
     })
     )
-  } //end componentDidMount
+  } //end componentDidMount, fetches all notes from DB
 
   clickedNote = (id) => {
     let selectedNote = this.state.notes.find(note => note.id === id)
     this.setState({
-      selectedNote: selectedNote,
-      selectedNoteId: id,
-      selectedEdit: false
+      selectedNote: selectedNote
     })
     console.log(selectedNote)
   } //end selectNote
@@ -39,15 +36,7 @@ class NoteContainer extends Component {
   //having issue passing this to NoteList
   //TypeError: props.clickedNote is not a function
 
-  findNote = () => {
-    return this.state.notes.find(note => note.id === this.state.selectedNoteId)
-  }
 
-  handleEditClick = () => {
-    this.setState({
-      selectedEdit: true
-    })
-  }
 
   postNote = () => {
     const newNote = {
@@ -70,6 +59,29 @@ class NoteContainer extends Component {
     })
   } //end postNote
 
+  handleEditSubmit = (note) => {
+    let noteID = this.state.clickedNote.id
+    fetch(notesAPI, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "applicaton/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        title: note.title,
+        body: note.body,
+        user_id: 1
+      })
+    })
+    .then(res => res.json())
+    .then(editedNote => {
+      this.componentDidMount()
+      this.setState({
+        selectedNote: editedNote
+      })
+    })
+  }
+
   handleSearchInput = event => {
   console.log(event.target.value);
   this.setState({
@@ -87,21 +99,6 @@ class NoteContainer extends Component {
     )
   }
 
-  renderContent = () => {
-    console.log("in render content");
-    console.log(this.state.selectedNote);
-    if (this.state.edit === true) {
-      return <NoteEditor
-        findNote={this.findNote}
-        />;
-    } else if (this.selectedNoteId !== undefined) {
-      return <NoteViewer
-        findNote={this.findNote}
-        />;
-    } else {
-      return <Instructions />;
-    }
-  }
 
 
   render() {
@@ -114,13 +111,13 @@ class NoteContainer extends Component {
         <div className='container'>
           <Sidebar
             notes={this.state.notes}
-            clickedNote={() => this.clickedNote}
+            clickedNote={this.clickedNote}
             postNote={this.postNote}
             />
-            <div className='master-detail-element detail'>
-              {this.renderContent()}
-            </div>
-
+          <Content
+            clickedNote={this.state.selectedNote}
+            handleEditSubmit={this.handleEditSubmit}
+            />
         </div>
 
       </Fragment>
@@ -129,3 +126,6 @@ class NoteContainer extends Component {
 }
 
 export default NoteContainer;
+
+
+//State lives in note container. Note container (at least the way application is currently built) has access to all components and containers and seems like the most logical place to pass changes in state through.

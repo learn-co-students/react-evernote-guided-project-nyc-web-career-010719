@@ -8,7 +8,7 @@ class Sidebar extends Component {
       <div className='master-detail-element sidebar'>
         <NoteList
           notes={this.props.notes}
-          clickedNote={() => this.props.clickedNote}
+          clickedNote={this.props.clickedNote}
            />
          <button onClick={this.props.postNote}>New</button>
       </div>
