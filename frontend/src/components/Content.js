@@ -13,6 +13,7 @@ import Instructions from './Instructions';
 class Content extends Component {
 
   state = {
+    selectedNote: this.props.selectedNote,
     editNote: false
   }
 
@@ -48,7 +49,7 @@ class Content extends Component {
 
   render() {
     return (
-      <div key={this.props.clickedNote} className='master-detail-element detail'>
+      <div key={this.props.clickedNote.id} className='master-detail-element detail'>
         {this.renderContent()}
       </div>
     );

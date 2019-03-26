@@ -12,6 +12,7 @@ class NoteContainer extends Component {
   state = {
     notes: [],
     selectedNote: {},
+    selectedEdit: false,
     filterNotes: [],
     searchTextInput: " "
   }
@@ -36,7 +37,11 @@ class NoteContainer extends Component {
   //having issue passing this to NoteList
   //TypeError: props.clickedNote is not a function
 
-
+  handleEditClick = () => {
+    this.setState({
+      selectedEdit: true
+    })
+  }
 
   postNote = () => {
     const newNote = {
@@ -61,7 +66,7 @@ class NoteContainer extends Component {
 
   handleEditSubmit = (note) => {
     let noteID = this.state.clickedNote.id
-    fetch(notesAPI, {
+    fetch(`notesAPI/${this.state.selectedNote.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "applicaton/json",
@@ -116,7 +121,9 @@ class NoteContainer extends Component {
             />
           <Content
             clickedNote={this.state.selectedNote}
+            selectedEdit={this.state.selectedEdit}
             handleEditSubmit={this.handleEditSubmit}
+            handleEditClick={this.handleEditClick}
             />
         </div>
 
