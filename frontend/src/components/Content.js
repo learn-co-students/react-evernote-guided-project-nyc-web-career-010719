@@ -23,7 +23,7 @@ class Content extends Component {
     })
   }
 
-  changeEditNote = () => {
+  cancelEdit = () => {
     this.setState({
       editNote: false
     })
@@ -34,7 +34,8 @@ class Content extends Component {
     if (this.state.editNote === true) {
       return <NoteEditor
         note={this.props.clickedNote}
-        handleEditSubmit={this.props.handleEditsubmit}
+        cancelEdit={this.cancelEdit}
+        handleEditSubmit={this.props.handleEditSubmit}
         handleEditClick={this.handleEditClick}
          />;
      } else if (this.props.clickedNote.id) {

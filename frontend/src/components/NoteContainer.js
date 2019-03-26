@@ -65,7 +65,7 @@ class NoteContainer extends Component {
   } //end postNote
 
   handleEditSubmit = (note) => {
-    let noteID = this.state.clickedNote.id
+    let noteID = this.state.selectedNote.id
     fetch(`notesAPI/${this.state.selectedNote.id}`, {
       method: "PATCH",
       headers: {
@@ -87,7 +87,7 @@ class NoteContainer extends Component {
     })
   }
 
-  handleSearchInput = event => {
+  handleSearch = event => {
   console.log(event.target.value);
   this.setState({
     searchTextInput: event.target.value
@@ -111,7 +111,7 @@ class NoteContainer extends Component {
     return (
       <Fragment>
         <Search
-          handleSearchInput={this.handleSearchInput}
+          handleSearchInput={this.handleSearch}
           />
         <div className='container'>
           <Sidebar

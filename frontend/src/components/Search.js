@@ -8,7 +8,7 @@ const Search = (props) => {
         id="search-bar"
         type="text"
         placeholder="Search Notes"
-        onChange={props.handleSearchInput}
+        onChange={props.handleSearch}
       />
     </div>
   );
