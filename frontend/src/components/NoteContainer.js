@@ -13,7 +13,6 @@ class NoteContainer extends Component {
     notes: [],
     selectedNote: {},
     selectedEdit: false,
-    selectedNoteId: null,
     filterNotes: [],
     searchTextInput: " "
   }
@@ -31,15 +30,9 @@ class NoteContainer extends Component {
     let selectedNote = this.state.notes.find(note => note.id === id)
     this.setState({
       selectedNote: selectedNote,
-      selectedNoteId: id
     })
     console.log(selectedNote)
   } //end selectNote
-
-  findNote = () => {
-    return this.state.notes.find(note => note.id === this.state.selectedNoteId)
-  }
-
   //having issue passing this to NoteList
   //TypeError: props.clickedNote is not a function
 
@@ -75,30 +68,35 @@ class NoteContainer extends Component {
   } //end postNote
 
   handleEditSubmit = (noteTitle, noteBody) => {
-    const noteUpdated = {title: noteTitle, body: noteBody}
+    console.log('before fetch');
     fetch(`${notesAPI}/${this.state.selectedNote.id}`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "applicaton/json",
+        "Content-Type": "application/json",
         "Accept": "application/json"
       },
-      body: JSON.stringify(noteUpdated)
+      body: JSON.stringify({
+          title: noteTitle,
+          body: noteBody,
+          user_id: 1
+      })
     })
-    .then(res => res.json())
+    .then(res => {
+      console.log(res);
+      return res.json()
+    })
     .then(editedNote => {
-      const notesCopy = [...this.state.notes]
-      const findEditedNote = this.findNote()
-      const editedIndex = notesCopy.indexOf(findEditedNote)
-      notesCopy[editedIndex] = noteUpdated
+      // this.componentDidMount()
+      console.log(editedNote);
       this.setState({
-        notes: notesCopy
+        selectedNote: editedNote
       })
     })
   }
 
   handleSearch = event => {
-  this.setState({
-    searchTextInput: event.target.value
+    this.setState({
+      searchTextInput: event.target.value
   });
 };
 
