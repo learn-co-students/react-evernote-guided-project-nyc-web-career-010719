@@ -12,14 +12,14 @@ class NoteEditor extends Component {
     })
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault()
+  handleSubmit = (event) => {
+    console.log(event)
+    event.preventDefault()
     this.props.handleEditSubmit(this.state.postTitle, this.state.postBody)
-    this.props.cancelEdit()
   }
   render() {
     return (
-      <form className="note-editor" onSubmit={this.handleSubmit}>
+      <form className="note-editor" onSubmit={(event) => this.handleSubmit(event)}>
         <input type="text" name="title" placeholder="title"
           defaultValue={this.props.note.title}
           onChange={this.handleEditChange}

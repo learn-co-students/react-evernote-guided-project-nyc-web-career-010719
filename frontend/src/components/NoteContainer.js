@@ -13,6 +13,7 @@ class NoteContainer extends Component {
     notes: [],
     selectedNote: {},
     selectedEdit: false,
+    selectedNoteId: null,
     filterNotes: [],
     searchTextInput: " "
   }
@@ -29,10 +30,15 @@ class NoteContainer extends Component {
   clickedNote = (id) => {
     let selectedNote = this.state.notes.find(note => note.id === id)
     this.setState({
-      selectedNote: selectedNote
+      selectedNote: selectedNote,
+      selectedNoteId: id
     })
     console.log(selectedNote)
   } //end selectNote
+
+  findNote = () => {
+    return this.state.notes.find(note => note.id === this.state.selectedNoteId)
+  }
 
   //having issue passing this to NoteList
   //TypeError: props.clickedNote is not a function
@@ -46,7 +52,11 @@ class NoteContainer extends Component {
   postNote = () => {
     const newNote = {
       title: "Default Title",
-      body: "Placeholder"
+      body: "Placeholder",
+      user: {
+      id: 1,
+      name: "harlangt"
+    }
     }
     fetch(notesAPI, {
       method: "POST",
@@ -64,31 +74,29 @@ class NoteContainer extends Component {
     })
   } //end postNote
 
-  handleEditSubmit = (note) => {
-    let noteID = this.state.selectedNote.id
-    fetch(`notesAPI/${this.state.selectedNote.id}`, {
+  handleEditSubmit = (noteTitle, noteBody) => {
+    const noteUpdated = {title: noteTitle, body: noteBody}
+    fetch(`${notesAPI}/${this.state.selectedNote.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "applicaton/json",
         "Accept": "application/json"
       },
-      body: JSON.stringify({
-        title: note.title,
-        body: note.body,
-        user_id: 1
-      })
+      body: JSON.stringify(noteUpdated)
     })
     .then(res => res.json())
     .then(editedNote => {
-      this.componentDidMount()
+      const notesCopy = [...this.state.notes]
+      const findEditedNote = this.findNote()
+      const editedIndex = notesCopy.indexOf(findEditedNote)
+      notesCopy[editedIndex] = noteUpdated
       this.setState({
-        selectedNote: editedNote
+        notes: notesCopy
       })
     })
   }
 
   handleSearch = event => {
-  console.log(event.target.value);
   this.setState({
     searchTextInput: event.target.value
   });
@@ -115,7 +123,7 @@ class NoteContainer extends Component {
           />
         <div className='container'>
           <Sidebar
-            notes={this.state.notes}
+            notes={this.filteredNotes()}
             clickedNote={this.clickedNote}
             postNote={this.postNote}
             />

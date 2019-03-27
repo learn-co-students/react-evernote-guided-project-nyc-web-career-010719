@@ -2,7 +2,7 @@ import React from 'react';
 import NoteItem from './NoteItem';
 
 const NoteList = props => {
-  console.log("in note list", props);
+  // console.log("in note list", props);
   return (
     <ul>
       {props.notes.map(note => {
