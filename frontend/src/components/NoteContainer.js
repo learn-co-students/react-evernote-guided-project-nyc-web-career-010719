@@ -63,6 +63,7 @@ class NoteContainer extends Component {
     .then(postNewNote => {
       this.setState({
         notes: [...this.state.notes, postNewNote]
+        //makes copy of notes state and passes new note to notes state
       })
     })
   } //end postNote
@@ -99,6 +100,8 @@ class NoteContainer extends Component {
       searchTextInput: event.target.value
   });
 };
+// function to pass value of text from search bar to set searchTextInput state to the
+// value of the search input
 
   filteredNotes = () => {
     return this.state.notes.filter(
@@ -109,9 +112,7 @@ class NoteContainer extends Component {
       )
     )
   }
-
-
-
+  //passing invoked fucntion to NoteList in Sidebar so that whenever text is typed into the Search component, Notelist is being filtered.
   render() {
     // console.log(this.state.notes)
     return (
